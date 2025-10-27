@@ -1,0 +1,116 @@
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+/* Tablet Devices (768px - 1024px) */
+@media screen and (max-width: 1024px) {
+    .title {
+        font-size: 1.75rem;
+    }
+    
+    .main-container {
+        padding: var(--spacing-md);
+    }
+    
+    .control-btn {
+        min-width: 120px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .bars-container {
+        height: 350px;
+    }
+}
+
+/* Mobile Devices (max-width: 768px) */
+@media screen and (max-width: 768px) {
+    .header {
+        padding: var(--spacing-md);
+    }
+    
+    .title {
+        font-size: 1.5rem;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .control-btn {
+        width: 100%;
+        min-width: unset;
+    }
+    
+    .bars-container {
+        height: 300px;
+        gap: 1px;
+    }
+    
+    .bar-value {
+        font-size: 0.6rem;
+    }
+    
+    .speed-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .speed-input {
+        width: 100%;
+    }
+    
+    .status-bar {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: stretch;
+    }
+    
+    .playback-controls {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .info-title {
+        font-size: 1.25rem;
+    }
+}
+
+/* Small Mobile Devices (max-width: 480px) */
+@media screen and (max-width: 480px) {
+    .title {
+        font-size: 1.25rem;
+    }
+    
+    .controls-section,
+    .visualization-section,
+    .animation-controls,
+    .info-section {
+        padding: var(--spacing-md);
+    }
+    
+    .bars-container {
+        height: 250px;
+    }
+    
+    .bar-value {
+        display: none; /* Hide values on very small screens */
+    }
+    
+    .playback-btn {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Large Desktop (min-width: 1440px) */
+@media screen and (min-width: 1440px) {
+    .main-container {
+        max-width: 1600px;
+    }
+    
+    .bars-container {
+        height: 500px;
+    }
+}
