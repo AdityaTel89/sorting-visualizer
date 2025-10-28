@@ -11,7 +11,17 @@
 <body>
     <!-- Header Section -->
     <header class="header">
-        <h1 class="title">Comparison Sorting Algorithms</h1>
+        <div class="header-content">
+            <h1 class="title">Comparison Sorting Algorithms</h1>
+            <div class="header-controls">
+                <button id="sound-toggle" class="theme-toggle" title="Toggle Sound">
+                    <span id="sound-icon">🔊</span>
+                </button>
+                <button id="theme-toggle" class="theme-toggle" title="Toggle Dark Mode">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
     </header>
 
     <!-- Main Container -->
@@ -39,25 +49,67 @@
 
         <!-- Animation Controls -->
         <section class="animation-controls">
-            <div class="control-group">
-                <span class="control-label">Animation Speed</span>
-                <div class="speed-controls">
-                    <label for="speed-width">w:</label>
-                    <input type="number" id="speed-width" class="speed-input" value="1000" min="100" max="5000" step="100">
-                    <label for="speed-height">h:</label>
-                    <input type="number" id="speed-height" class="speed-input" value="500" min="100" max="2000" step="100">
-                    <button id="change-canvas-btn" class="control-btn-small">Change Canvas Size</button>
-                    <button id="move-controls-btn" class="control-btn-small">Move Controls</button>
+            <div class="status-info-bar">
+                <div class="status-group">
+                    <span id="status-text" class="status-text">Ready to sort</span>
+                    <span id="comparison-count" class="comparison-counter">Comparisons: 0</span>
+                    <span id="swap-count" class="swap-counter">Swaps: 0</span>
                 </div>
             </div>
-            <div class="status-bar">
-                <span id="status-text" class="status-text">Animation Completed</span>
-                <div class="playback-controls">
-                    <button id="step-back-btn" class="playback-btn">Step Back</button>
-                    <button id="step-back-small-btn" class="playback-btn">Step Back</button>
-                    <button id="pause-btn" class="playback-btn">Pause</button>
-                    <button id="step-forward-btn" class="playback-btn">Step Forward</button>
-                    <button id="step-forward-small-btn" class="playback-btn">Step Forward</button>
+
+            <div class="playback-control-row">
+                <button id="skip-back-btn" class="playback-btn" title="Skip to Beginning">
+                    <span>⏮️</span> Skip Back
+                </button>
+                <button id="step-back-btn" class="playback-btn" title="Step Back">
+                    <span>◀️</span> Step Back
+                </button>
+                <button id="pause-btn" class="playback-btn" title="Pause/Resume">
+                    <span id="pause-icon">⏸️</span> <span id="pause-text">Pause</span>
+                </button>
+                <button id="step-forward-btn" class="playback-btn" title="Step Forward">
+                    <span>▶️</span> Step Forward
+                </button>
+                <button id="skip-forward-btn" class="playback-btn" title="Skip to End">
+                    <span>⏭️</span> Skip Forward
+                </button>
+            </div>
+
+            <div class="speed-canvas-controls">
+                <div class="speed-control-group">
+                    <label for="speed-slider" class="control-label">
+                        <span class="label-text">Animation Speed</span>
+                        <span id="speed-value" class="speed-value">50 ms</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="speed-slider" 
+                        class="speed-slider" 
+                        min="1" 
+                        max="200" 
+                        value="50" 
+                        step="1"
+                    >
+                    <div class="speed-display">
+                        <span>w: <input type="number" id="speed-width-input" class="size-input" value="1000" min="100" max="5000"></span>
+                        <span>h: <input type="number" id="speed-height-input" class="size-input" value="500" min="100" max="2000"></span>
+                        <button id="change-canvas-btn" class="control-action-btn">Change Canvas Size</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keyboard Shortcuts Info -->
+            <div class="shortcuts-info">
+                <button id="shortcuts-toggle" class="shortcuts-btn">⌨️ Keyboard Shortcuts</button>
+                <div id="shortcuts-panel" class="shortcuts-panel hidden">
+                    <h4>Keyboard Shortcuts:</h4>
+                    <ul>
+                        <li><kbd>Space</kbd> - Pause/Resume</li>
+                        <li><kbd>R</kbd> - Randomize Array</li>
+                        <li><kbd>←</kbd> - Step Back</li>
+                        <li><kbd>→</kbd> - Step Forward</li>
+                        <li><kbd>Esc</kbd> - Close Modal</li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -71,9 +123,54 @@
         </section>
     </main>
 
+    <!-- Custom Modal for Array Size -->
+    <div id="size-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Change Array Size</h3>
+                <button class="modal-close" id="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label for="array-size-input" class="modal-label">
+                    Enter new array size (10-100):
+                </label>
+                <input 
+                    type="number" 
+                    id="array-size-input" 
+                    class="modal-input" 
+                    min="10" 
+                    max="100" 
+                    value="50"
+                    placeholder="Enter size"
+                >
+                <div class="size-slider-container">
+                    <input 
+                        type="range" 
+                        id="array-size-slider" 
+                        class="modal-slider" 
+                        min="10" 
+                        max="100" 
+                        value="50"
+                    >
+                    <div class="slider-labels">
+                        <span>10</span>
+                        <span>50</span>
+                        <span>100</span>
+                    </div>
+                </div>
+                <p class="modal-hint">Current size: <span id="current-size-display">50</span></p>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-cancel-btn" class="modal-btn btn-cancel">Cancel</button>
+                <button id="modal-apply-btn" class="modal-btn btn-apply">Apply</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="js/config.js"></script>
     <script src="js/utils/arrayGenerator.js"></script>
+    <script src="js/utils/sounds.js"></script>
     <script src="js/utils/visualizer.js"></script>
     <script src="js/utils/controls.js"></script>
     <script src="js/algorithms/bubbleSort.js"></script>

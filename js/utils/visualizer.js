@@ -1,6 +1,5 @@
 /**
- * Visualizer Module
- * Handles DOM manipulation and visual representation of the array
+ * Visualizer Module with State History and Animation Replay
  */
 
 class Visualizer {
@@ -8,14 +7,139 @@ class Visualizer {
         this.container = document.getElementById(containerId);
         this.bars = [];
         this.animationDelay = CONFIG.DEFAULT_DELAY;
-        this.isPaused = false;
+        
+        // State history for step back/forward
+        this.history = [];
+        this.currentStep = -1;
+        this.isRecording = false;
     }
 
     /**
-     * Create and render bars based on array values
+     * Start recording history
+     */
+    startRecording() {
+        this.history = [];
+        this.currentStep = -1;
+        this.isRecording = true;
+        
+        // Save initial state
+        const initialArray = arrayGenerator.getArray();
+        this.recordState(initialArray, 'initial', []);
+    }
+
+    /**
+     * Stop recording
+     */
+    stopRecording() {
+        this.isRecording = false;
+    }
+
+    /**
+     * Record a state with indices and action
+     */
+    recordState(array, action = 'step', indices = []) {
+        if (!this.isRecording) return;
+        
+        const state = {
+            array: [...array],
+            action: action,
+            indices: indices
+        };
+        
+        this.history.push(state);
+        this.currentStep = this.history.length - 1;
+    }
+
+    /**
+     * Step back one state with animation
+     */
+    async stepBackward() {
+        if (this.currentStep > 0) {
+            this.currentStep--;
+            const state = this.history[this.currentStep];
+            
+            // Update array
+            arrayGenerator.updateArray(state.array);
+            this.updateBars(state.array);
+            
+            // Replay the animation
+            await this.replayState(state);
+            
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Step forward one state with animation
+     */
+    async stepForward() {
+        if (this.currentStep < this.history.length - 1) {
+            this.currentStep++;
+            const state = this.history[this.currentStep];
+            
+            // Update array
+            arrayGenerator.updateArray(state.array);
+            this.updateBars(state.array);
+            
+            // Replay the animation
+            await this.replayState(state);
+            
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Replay the animation for a given state
+     */
+    async replayState(state) {
+        // Reset all colors first
+        this.resetAllColors();
+        
+        // Highlight based on action type
+        if (state.action === 'compare' && state.indices.length >= 2) {
+            this.highlightBars(state.indices, CONFIG.COLORS.COMPARING);
+            await this.sleep(this.animationDelay * 2);
+            this.resetAllColors();
+        } 
+        else if (state.action === 'swap' && state.indices.length >= 2) {
+            this.highlightBars(state.indices, CONFIG.COLORS.SWAPPING);
+            await this.sleep(this.animationDelay * 2);
+            this.resetAllColors();
+        }
+        else if (state.action === 'pivot' && state.indices.length >= 1) {
+            this.highlightBars(state.indices, CONFIG.COLORS.PIVOT);
+            await this.sleep(this.animationDelay);
+        }
+        
+        // Update the visual state
+        this.updateBars(state.array);
+    }
+
+    /**
+     * Get current step info
+     */
+    getStepInfo() {
+        return {
+            current: this.currentStep + 1,
+            total: this.history.length
+        };
+    }
+
+    /**
+     * Clear history
+     */
+    clearHistory() {
+        this.history = [];
+        this.currentStep = -1;
+        this.isRecording = false;
+    }
+
+    /**
+     * Render bars based on array values
      */
     renderBars(array) {
-        // Clear existing bars
         this.container.innerHTML = '';
         this.bars = [];
 
@@ -30,13 +154,11 @@ class Visualizer {
             bar.setAttribute('data-index', index);
             bar.setAttribute('data-value', value);
 
-            // Calculate bar height proportionally
             const barHeight = (value / maxValue) * (containerHeight - 30);
             bar.style.width = `${barWidth}px`;
             bar.style.height = `${barHeight}px`;
             bar.style.backgroundColor = CONFIG.COLORS.UNSORTED;
 
-            // Add value label
             const valueLabel = document.createElement('span');
             valueLabel.classList.add('bar-value');
             valueLabel.textContent = value;
@@ -112,28 +234,48 @@ class Visualizer {
     }
 
     /**
-     * Swap visual representation of two bars
+     * Swap visual representation of two bars - WITH SOUND
      */
     async swapBars(index1, index2, array) {
         if (!this.bars[index1] || !this.bars[index2]) return;
 
-        // Highlight bars being swapped
+        // Increment swap counter
+        controls.incrementSwaps();
+        
         this.highlightBars([index1, index2], CONFIG.COLORS.SWAPPING);
+        
+        // Play swap sound with pitch based on values
+        const maxValue = Math.max(...array);
+        soundManager.playSwap(array[index1], array[index2], maxValue);
+        
         await this.sleep(this.animationDelay);
 
-        // Update heights and values
         this.updateBars(array);
+        
+        // Record state after swap with indices
+        this.recordState(array, 'swap', [index1, index2]);
 
-        // Reset colors
         this.resetBarColor(index1);
         this.resetBarColor(index2);
     }
 
     /**
-     * Compare two bars visually
+     * Compare two bars visually - WITH SOUND
      */
     async compareBars(index1, index2) {
+        // Increment comparison counter
+        controls.incrementComparisons();
+        
         this.highlightBars([index1, index2], CONFIG.COLORS.COMPARING);
+        
+        // Record state during comparison with indices
+        const array = arrayGenerator.getArray();
+        this.recordState(array, 'compare', [index1, index2]);
+        
+        // Play comparison sound with pitch based on values
+        const maxValue = Math.max(...array);
+        soundManager.playCompare(array[index1], array[index2], maxValue);
+        
         await this.sleep(this.animationDelay);
     }
 
@@ -143,13 +285,18 @@ class Visualizer {
     highlightPivot(index) {
         if (this.bars[index]) {
             this.bars[index].style.backgroundColor = CONFIG.COLORS.PIVOT;
+            
+            // Record pivot state
+            const array = arrayGenerator.getArray();
+            this.recordState(array, 'pivot', [index]);
         }
     }
 
     /**
-     * Sleep/delay function for animations
+     * Sleep/delay function for animations with pause support
      */
-    sleep(ms) {
+    async sleep(ms) {
+        await controls.checkPause();
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 

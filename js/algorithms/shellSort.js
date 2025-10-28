@@ -1,6 +1,6 @@
 /**
  * Shell Sort Algorithm
- * Time Complexity: O(n log n) to O(n²)
+ * Time Complexity: O(n²) to O(n log n) depending on gap sequence
  * Space Complexity: O(1)
  */
 
@@ -8,43 +8,45 @@ async function shellSort() {
     const array = arrayGenerator.getArray();
     const n = array.length;
 
-    // Start with a large gap, then reduce the gap
+    // Start with a large gap and reduce it
     for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
-        // Do a gapped insertion sort
+        // Perform gapped insertion sort
         for (let i = gap; i < n; i++) {
-            const temp = array[i];
-            
-            // Highlight current element
-            visualizer.highlightPivot(i);
-            await visualizer.sleep(visualizer.getDelay());
-
+            let temp = array[i];
             let j = i;
 
-            // Shift earlier gap-sorted elements up until correct location is found
-            while (j >= gap && array[j - gap] > temp) {
-                // Highlight comparison
-                visualizer.highlightBars([j, j - gap], CONFIG.COLORS.COMPARING);
-                await visualizer.sleep(visualizer.getDelay());
+            // Highlight elements being compared
+            visualizer.highlightBars([i], CONFIG.COLORS.COMPARING);
+            await visualizer.sleep(visualizer.animationDelay);
 
-                // Shift element
-                array[j] = array[j - gap];
-                arrayGenerator.updateArray(array);
-                visualizer.updateBars(array);
-
-                visualizer.resetBarColor(j);
-                j -= gap;
+            while (j >= gap) {
+                // IMPORTANT: Call compareBars to increment counter
+                await visualizer.compareBars(j - gap, j);
+                
+                if (array[j - gap] > temp) {
+                    // Swap elements
+                    array[j] = array[j - gap];
+                    
+                    // Increment swap counter
+                    controls.incrementSwaps();
+                    
+                    // Update visualization
+                    visualizer.updateBars(array);
+                    visualizer.highlightBars([j, j - gap], CONFIG.COLORS.SWAPPING);
+                    await visualizer.sleep(visualizer.animationDelay);
+                    
+                    j -= gap;
+                } else {
+                    break;
+                }
             }
 
-            // Put temp in its correct location
             array[j] = temp;
-            arrayGenerator.updateArray(array);
             visualizer.updateBars(array);
             visualizer.resetBarColor(j);
-
-            await visualizer.sleep(visualizer.getDelay());
         }
     }
 
+    // Mark all as sorted
     visualizer.markAllAsSorted();
-    controls.showCompletionStatus('Shell Sort');
 }

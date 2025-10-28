@@ -1,70 +1,122 @@
 # 🎨 Sorting Algorithm Visualizer
 
-An interactive web application that visualizes how different sorting algorithms work in real-time. Built with vanilla JavaScript, HTML5, and CSS3.
-
-![Sorting Visualizer Demo](screenshot.png)
+An interactive web-based tool to visualize and understand various sorting algorithms in real-time with sound effects, step-by-step navigation, and comprehensive metrics tracking.
 
 ## ✨ Features
 
-- **6 Sorting Algorithms**: Bubble, Selection, Insertion, Quick, Merge, and Shell Sort
-- **Real-time Visualization**: Watch algorithms sort step-by-step with color-coded states
-- **Interactive Controls**: Adjust animation speed and array size
-- **Algorithm Information**: View time and space complexity for each algorithm
-- **Responsive Design**: Works on desktop, tablet, and mobile devices
-- **No Dependencies**: Pure vanilla JavaScript
+### 🔢 **Sorting Algorithms**
+- **Bubble Sort** - Simple comparison-based algorithm
+- **Selection Sort** - Finds minimum and swaps
+- **Insertion Sort** - Builds sorted array incrementally
+- **Quick Sort** - Divide and conquer with pivot
+- **Merge Sort** - Recursive divide and merge
+- **Shell Sort** - Optimized insertion sort with gaps
 
-## 🚀 Live Demo
+### 🎮 **Playback Controls**
+- ⏸️ **Pause/Resume** - Control animation flow (Space key)
+- ◀️ **Step Back** - Review previous step with animation (← key)
+- ▶️ **Step Forward** - Advance one step with animation (→ key)
+- ⏮️ **Skip Back** - Reset to unsorted array
+- ⏭️ **Skip Forward** - Jump to fully sorted state
 
-[View Live Demo](https://yourusername.github.io/sorting-visualizer)
+### 📊 **Metrics & Analysis**
+- **Comparison Counter** - Tracks element comparisons
+- **Swap Counter** - Tracks element swaps/moves
+- **Timer** - Measures algorithm execution time
+- **Complexity Info** - Displays time/space complexity for each algorithm
+- **State History** - Complete step-by-step recording
 
-## 📸 Screenshots
+### 🎵 **Sound Effects**
+- Musical beeps during comparisons (pitch varies with values)
+- Click sounds during swaps
+- Victory melody on completion
+- Error buzz on interruption
+- Toggle on/off with sound button
 
-[Add screenshots here]
+### 🎨 **Customization**
+- **Array Size** - Adjust from 10 to 100 elements via modal
+- **Animation Speed** - Control from 1ms to 200ms
+- **Canvas Size** - Custom width and height
+- **Dark Mode** - Eye-friendly theme toggle
+- **Responsive Design** - Works on all devices
 
-## 🛠️ Technologies Used
+### ⌨️ **Keyboard Shortcuts**
+- `Space` - Pause/Resume sorting
+- `R` - Randomize array
+- `←` - Step backward
+- `→` - Step forward
+- `Esc` - Close modal
 
-- HTML5
-- CSS3 (Flexbox, Grid, Animations)
-- JavaScript (ES6+)
-- Async/Await for animations
+## 🚀 Quick Start
 
-## 📦 Installation
+### Prerequisites
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+- No external dependencies or installations required
 
-1. Clone the repository:
+### Installation
+
+1. **Clone the repository**
 git clone https://github.com/yourusername/sorting-visualizer.git
-
-2. Navigate to project directory:
 cd sorting-visualizer
 
-3. Open `index.html` in your browser:
+2. **Open in browser**
+Simply open index.html in your browser
 
-On macOS
-open index.html
 
-On Linux
-xdg-open index.html
+## 🎯 Usage Guide
 
-On Windows
-start index.html
+### Basic Usage
 
-No build process or dependencies required!
+1. **Select an Algorithm** - Click any sorting algorithm button
+2. **Watch the Visualization** - Bars animate to show the sorting process
+3. **Control Playback** - Use pause, step forward/back buttons
+4. **Adjust Settings** - Change speed, size, or theme as needed
 
-## 🎮 Usage
+### Step-by-Step Navigation
 
-1. **Randomize Array**: Click to generate a new random array
-2. **Select Algorithm**: Choose any sorting algorithm button
-3. **Watch**: Observe the visualization in real-time
-4. **Adjust Speed**: Modify animation speed using the input fields
-5. **Change Size**: Adjust the number of elements to sort
+1. **Run any algorithm** and wait for completion
+2. **Click Step Back** (or press ←) to review previous steps
+3. **Click Step Forward** (or press →) to advance through steps
+4. Each step shows the animation of that comparison/swap
 
-## 🎨 Color Coding
+### Sound Effects
 
-- **Blue**: Unsorted elements
-- **Red**: Elements being compared
-- **Gold**: Pivot element (Quick Sort)
-- **Green**: Sorted elements
+1. **Click the 🔊 button** to enable/disable sound
+2. **Comparison sounds** - Higher pitches for larger values
+3. **Swap sounds** - Distinct click for each swap
+4. **Completion melody** - Ascending notes when done
 
-## 📊 Algorithm Complexity
+### Dark Mode
+
+1. **Click the 🌙 button** to toggle dark mode
+2. Preference is saved in localStorage
+3. Automatically loads on page refresh
+
+## 🎨 Color Scheme
+
+- **Unsorted** - Blue (`#6495ED`)
+- **Comparing** - Red (`#FF0000`)
+- **Swapping** - Purple (animated)
+- **Pivot** - Gold (`#FFD700`)
+- **Sorted** - Green (`#31E20D`)
+
+## 🔧 Configuration
+
+Edit `js/config.js` to customize:
+
+const CONFIG = {
+ARRAY_SIZE: 50, // Default array size
+MIN_ARRAY_SIZE: 10, // Minimum size
+MAX_ARRAY_SIZE: 100, // Maximum size
+DEFAULT_DELAY: 50, // Animation speed (ms)
+MIN_DELAY: 1, // Fastest speed
+MAX_DELAY: 200, // Slowest speed
+BAR_GAP: 2, // Gap between bars (px)
+// ... color definitions
+};
+
+
+## 📚 Algorithm Complexity
 
 | Algorithm | Best | Average | Worst | Space |
 |-----------|------|---------|-------|-------|
@@ -73,61 +125,69 @@ No build process or dependencies required!
 | Insertion Sort | O(n) | O(n²) | O(n²) | O(1) |
 | Quick Sort | O(n log n) | O(n log n) | O(n²) | O(log n) |
 | Merge Sort | O(n log n) | O(n log n) | O(n log n) | O(n) |
-| Shell Sort | O(n log n) | O(n log²n) | O(n²) | O(1) |
+| Shell Sort | O(n log n) | O(n^1.3) | O(n²) | O(1) |
 
-## 📁 Project Structure
+## 🌟 Key Features Explained
 
-sorting-visualizer/
-├── index.html
-├── css/
-│ ├── style.css
-│ └── responsive.css
-├── js/
-│ ├── main.js
-│ ├── config.js
-│ ├── algorithms/
-│ │ ├── bubbleSort.js
-│ │ ├── selectionSort.js
-│ │ ├── insertionSort.js
-│ │ ├── quickSort.js
-│ │ ├── mergeSort.js
-│ │ └── shellSort.js
-│ └── utils/
-│ ├── arrayGenerator.js
-│ ├── visualizer.js
-│ └── controls.js
-└── docs/
-└── README.md
+### State History System
+- Records every comparison and swap during sorting
+- Allows complete replay of the sorting process
+- Step back/forward with animated visualization
 
-## 🤝 Contributing
+### Web Audio API
+- Generates sounds programmatically (no external files)
+- Dynamic pitch based on element values
+- Musical intervals for pleasing sounds
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+### Modular Architecture
+- Separate files for each component
+- Easy to add new algorithms
+- Clean separation of concerns
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## 🐛 Troubleshooting
+
+**Sound not working?**
+- Click the sound toggle button to initialize
+- Check browser console for errors
+- Some browsers require user interaction first
+
+**Animations too fast/slow?**
+- Adjust the speed slider
+- Recommended: 30-100ms for best visualization
+
+**Step back/forward not working?**
+- Only available after algorithm completes
+- Make sure sorting finished successfully
+
+**Dark mode not saving?**
+- Check if localStorage is enabled
+- Clear browser cache if needed
+
 
 ## 📝 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Name](https://linkedin.com/in/yourprofile)
+- GitHub: [@AdityaTel89](https://github.com/AdityaTel89)
+- LinkedIn: [aditya-telsinge](https://www.linkedin.com/in/aditya-telsinge/)
+- Portfolio: [adityatelsinge.com](https://adityatelsinge.netlify.app/)
 
 ## 🙏 Acknowledgments
 
-- Inspired by VisuAlgo and other sorting visualizers
-- Algorithm implementations based on standard CS textbooks
+- Inspired by visualgo.net and algorithm visualization tools
+- Web Audio API documentation
+- Modern CSS techniques for animations
 
-## 📞 Contact
+## 📧 Contact
 
-Have questions or feedback? Feel free to reach out!
+For questions or suggestions, please open an issue or reach out at adityatelsinge@gmail.com
 
 ---
 
-⭐ Star this repo if you find it helpful!
+⭐ If you find this project helpful, please consider giving it a star!
+
+Made with ❤️ and JavaScript
+
